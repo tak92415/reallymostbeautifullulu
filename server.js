@@ -465,45 +465,82 @@ app.put('/restaurant_id/:id/grade',function(req,res)
 
 app.put('/restaurant_id/:id/deleteGrade',function(req,res)
 
+
+
 {
 
+
+
  	var restaurantSchema = require('./models/restaurant');
+
  	mongoose.connect(mongodbURL);
 
 
+
+
+
 	 var db = mongoose.connection;
+
 	 db.on('error', console.error.bind(console, 'Connection Error:('));
+
 	 db.once('open', function (callback) 
+
 	 {
 
+
+
 		  var Restaurant = mongoose.model('Restaurant', restaurantSchema);
+
   			Restaurant.findOne({restaurant_id: req.params.id},function(err,results)
+
   			{
+
         		 if (err) 
+
          		{
+
 				    res.status(500).json(err);
+
 				    throw err
-				  }
-			   if (results.length > 0) 
-			   {
-			    res.status(200).json({message: 'No matching document'});
-			   }
+
+			}
+
+		
+
 			   else
-			    { 
-					results.grades.pop({date:req.body.date , grade:req.body.grade , score:req.body.score});
+
+			    { 		
+					if(results.grades.pop({date:req.body.date , grade:req.body.grade , score:req.body.score})== undefined )
+{
+	res.status(200).json({message: 'No matching document'});
+};
+
+					
+
 			   		console.log(req.body.date);
+
 			     results.save(function(err)
+
 			     {
+
 				      if (err) throw err
-				      // console.log("yeah "+results);
-				     console.log(results.grades);
-				      console.log("Updated"); 
+
+				      // console.log("yeah "+result
+
+				      	console.log("Updated"); 
+
 			     });
-			    res.status(200).json(results);
+
+			    res.status(200).json(err);
+
 			   }
+
 			   db.close();
+
 			  });
+
 	});
+
 });
 //get data by --data : update by address
 app.put('/restaurant_id/:id/address',function(req,res)
